@@ -6,3 +6,4 @@ tensorflow
 uvicorn
 h5py
 python-multipart
+gunicorn

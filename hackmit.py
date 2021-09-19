@@ -1,6 +1,7 @@
 import numpy as np
 from fastapi import FastAPI, Form
 import pandas as pd
+from starlette.responses import HTMLResponse
 import tensorflow as tf
 import csv
 
@@ -32,6 +33,19 @@ def give_output(input_value, final):
     for i in range(0, input_value):
         arr.append([final['Latitude'][i], final['Longitude'][i]])
     return arr
+
+
+@app.get('/')  # basic get view
+def basic_view():
+    return {"WELCOME": "GO TO /docs route, or /post or send post request to /api "}
+
+
+@app.get('/api', response_class=HTMLResponse)  # data input by forms
+def take_inp():
+    return '''<form method="post"> 
+    <input type="number" name="noOFEvs" value="20"/>  
+    <input type="submit"/> 
+    </form>'''
 
 
 @app.post('/api')  # prediction on data
