@@ -1,7 +1,8 @@
 import numpy as np
 from fastapi import FastAPI, Form
 import pandas as pd
-import tensorflow as tf
+from starlette.responses import HTMLResponse
+import tensorflow.keras.models as models
 import csv
 
 app = FastAPI()
@@ -34,10 +35,23 @@ def give_output(input_value, final):
     return arr
 
 
+@app.get('/')  # basic get view
+def basic_view():
+    return {"WELCOME": "GO TO /docs route, or /post or send post request to /api "}
+
+
+@app.get('/api', response_class=HTMLResponse)  # data input by forms
+def take_inp():
+    return '''<form method="post"> 
+    <input type="number" name="noOfEvs" value="20"/>  
+    <input type="submit"/> 
+    </form>'''
+
+
 @app.post('/api')  # prediction on data
 def predict(noOfEvs: int = Form(...)):  # input is from forms
     get_array = getArray()
-    loaded_model = tf.keras.models.load_model(
+    loaded_model = models.load_model(
         'hackmit.h5')  # loading the saved model
     predictions_array = loaded_model.predict(get_array)  # making predictions
     accuracy = getAccuracy(predictions_array)
